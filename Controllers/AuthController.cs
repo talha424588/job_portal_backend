@@ -11,9 +11,6 @@ namespace JobPortal.Controllers
         public string test()
         {
             return ("testing api hit");
-        }
-
-        [HttpPost]
-        
+        }        
     }
 }
