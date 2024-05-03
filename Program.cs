@@ -2,7 +2,11 @@ using AutoMapper;
 using JobPortal.Context;
 using JobPortal.Repositories;
 using JobPortal.Services;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using UserManagement.Utils;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -14,6 +18,28 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthRepository, AuthService>();
 builder.Services.AddAutoMapper(typeof(Program));
+builder.Services.AddSingleton<JWT>();
+
+//Jwt Start Here
+builder.Services.AddAuthentication(Options => {
+    Options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
+    Options.DefaultChallengeScheme = JwtBearerDefaults.AuthenticationScheme;
+}).AddJwtBearer(Options =>
+{
+    Options.TokenValidationParameters = new Microsoft.IdentityModel.Tokens.TokenValidationParameters()
+    {
+        ValidateActor = true,
+        ValidateIssuer = true,
+        ValidateAudience = true,
+        RequireExpirationTime = true,
+        ValidateIssuerSigningKey = true,
+        ValidIssuer = builder.Configuration.GetSection("JWT:Issuer").Value,
+        ValidAudience = builder.Configuration.GetSection("JWT:Audence").Value,
+        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration.GetSection("JWT:Secret").Value))
+    };
+});
+//Jwt Ends Here
+builder.Services.AddAuthorization(options => options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("ROLES_ADMIN")));
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbsc")));
 
 var app = builder.Build();
@@ -26,7 +52,7 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseHttpsRedirection();
-
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllers();

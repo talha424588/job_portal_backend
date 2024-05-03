@@ -26,6 +26,11 @@ namespace JobPortal.Models
         public string email { get; set; }
 
         [Required]
+        [StringLength(100)]
+        [Column("password", TypeName = "varchar(100)")]
+        public string password { get; set; }
+
+        [Required]
         [StringLength(40)]
         [Column("city", TypeName = "varchar(40)")]
         public string city { get; set; }

@@ -11,6 +11,7 @@ namespace JobPortal.Utils
         {
             CreateMap<User, RegisterRequestBody>().ReverseMap();
             CreateMap<User, RegisterResponseBody>().ReverseMap();
+            CreateMap<User, LoginResponseBody>().ReverseMap();
         }
     }
 }

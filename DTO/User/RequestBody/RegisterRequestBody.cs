@@ -19,6 +19,10 @@ namespace JobPortal.DTO.User.RequestBody
         [EmailAddress]
         public string email { get; set; }
 
+        [Required(ErrorMessage = "Enter Password")]
+        [StringLength(100)]
+        public string password { get; set; }
+
         [Required(ErrorMessage = "Enter City Name")]
         [StringLength(40)]
         public string city { get; set; }

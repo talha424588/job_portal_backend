@@ -2,9 +2,11 @@
 using JobPortal.Context;
 using JobPortal.DTO.User.RequestBody;
 using JobPortal.DTO.User.ResponseBody;
+using JobPortal.Exceptions;
 using JobPortal.Models;
 using JobPortal.Repositories;
 using Microsoft.EntityFrameworkCore;
+using UserManagement.Utils;
 
 namespace JobPortal.Services
 {
@@ -12,23 +14,38 @@ namespace JobPortal.Services
     {
         private readonly DatabaseContext context;
         private readonly IMapper mapper;
+        private readonly JWT jwt;
 
         //private readonly Mapper mapper;
 
-        public AuthService(DatabaseContext context, IMapper mapper) {
+        public AuthService(DatabaseContext context, IMapper mapper,JWT jwt) {
             this.context = context;
             this.mapper = mapper;
+            this.jwt = jwt;
             //this.mapper = mapper;
         }
 
         public async Task<LoginResponseBody> loginUser(LoginRequestBody requestBody)
         {
-            var user = await context.Users.FirstOrDefaultAsync(u=>u.email == requestBody.email);
-            if(user != null)
+            var user = await context.Users.
+                Include(u=>u.role).FirstOrDefaultAsync(u=>u.email == requestBody.email);
+            if (user != null)   
             {
-               // return user;
+                if(BCrypt.Net.BCrypt.Verify(requestBody.password, user.password))
+                {
+                    LoginResponseBody loginResponse = mapper.Map<LoginResponseBody>(user);
+                    loginResponse.token = jwt.generateToken(user.email,user.role.name);
+                    return loginResponse;
+                }
+                else
+                {
+                    throw new InvalidCredential();
+                }
             }
-            throw new NotImplementedException();
+            else
+            {
+                throw new NotFound();
+            }
         }
 
         public async Task<RegisterResponseBody> saveUser(RegisterRequestBody registerRequest)
@@ -39,6 +56,7 @@ namespace JobPortal.Services
                 throw new Exception("user already exist");
             }
                 var newUser = mapper.Map<User>(registerRequest);
+                newUser.password = BCrypt.Net.BCrypt.HashPassword(newUser.password);
                 newUser.roleId = new Guid("E7FAC944-C656-4786-4E00-08DC69AEFC95");
                 try
                 {
