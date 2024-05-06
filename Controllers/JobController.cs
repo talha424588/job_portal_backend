@@ -10,7 +10,8 @@ namespace JobPortal.Controllers
     {
         [HttpGet]
         [Authorize(Policy = "RequireAdminRole")]
-        public string Get() {
+        public string Get() 
+        {
             return ("get function called");
         }
     }

@@ -6,6 +6,7 @@ namespace JobPortal.Models
     public class User
     {
         [Key]
+        [Required]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public Guid id { get; set; }
 
@@ -48,6 +49,8 @@ namespace JobPortal.Models
         public Guid roleId { get; set; }
 
         public Role role { get; set; }
+
+        public Employer employer { get; set; }
 
     }
 }

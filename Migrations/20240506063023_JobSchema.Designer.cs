@@ -4,6 +4,7 @@ using JobPortal.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace JobPortal.Migrations
 {
     [DbContext(typeof(DatabaseContext))]
-    partial class DatabaseContextModelSnapshot : ModelSnapshot
+    [Migration("20240506063023_JobSchema")]
+    partial class JobSchema
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -123,26 +125,6 @@ namespace JobPortal.Migrations
                     b.ToTable("Jobs");
                 });
 
-            modelBuilder.Entity("JobPortal.Models.JobSkill", b =>
-                {
-                    b.Property<Guid>("id")
-                        .ValueGeneratedOnAdd()
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<Guid?>("Jobid")
-                        .HasColumnType("uniqueidentifier");
-
-                    b.Property<string>("name")
-                        .IsRequired()
-                        .HasColumnType("nvarchar(max)");
-
-                    b.HasKey("id");
-
-                    b.HasIndex("Jobid");
-
-                    b.ToTable("JobSkill");
-                });
-
             modelBuilder.Entity("JobPortal.Models.Role", b =>
                 {
                     b.Property<Guid>("Id")
@@ -239,13 +221,6 @@ namespace JobPortal.Migrations
                     b.Navigation("employer");
                 });
 
-            modelBuilder.Entity("JobPortal.Models.JobSkill", b =>
-                {
-                    b.HasOne("JobPortal.Models.Job", null)
-                        .WithMany("skills")
-                        .HasForeignKey("Jobid");
-                });
-
             modelBuilder.Entity("JobPortal.Models.User", b =>
                 {
                     b.HasOne("JobPortal.Models.Role", "role")
@@ -260,11 +235,6 @@ namespace JobPortal.Migrations
             modelBuilder.Entity("JobPortal.Models.Employer", b =>
                 {
                     b.Navigation("Jobs");
-                });
-
-            modelBuilder.Entity("JobPortal.Models.Job", b =>
-                {
-                    b.Navigation("skills");
                 });
 
             modelBuilder.Entity("JobPortal.Models.Role", b =>
