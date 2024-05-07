@@ -17,8 +17,11 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddScoped<IAuthRepository, AuthService>();
+builder.Services.AddScoped<IEmployerRepository,EmployerService>();
 builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddSingleton<JWT>();
+builder.Services.AddHttpContextAccessor();
+
 
 //Jwt Start Here
 builder.Services.AddAuthentication(Options => {

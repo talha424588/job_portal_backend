@@ -1,4 +1,7 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using JobPortal.DTO.User.RequestBody;
+using JobPortal.DTO.User.ResponseBody;
+using JobPortal.Repositories;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 
@@ -8,11 +11,17 @@ namespace JobPortal.Controllers
     [ApiController]
     public class JobController : ControllerBase
     {
+        private readonly IJobRepository jobRepository;
+
+        public JobController(IJobRepository jobRepository)
+        {
+            this.jobRepository = jobRepository;
+        }
         [HttpGet]
         [Authorize(Policy = "RequireAdminRole")]
-        public string Get() 
+        public Task<JobResponseBody> AddJob(JobRequestBody requestBody) 
         {
-            return ("get function called");
+            return jobRepository.CreateJob(requestBody);
         }
     }
 }
