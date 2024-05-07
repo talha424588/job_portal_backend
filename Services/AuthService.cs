@@ -22,9 +22,7 @@ namespace JobPortal.Services
             this.context = context;
             this.mapper = mapper;
             this.jwt = jwt;
-            //this.mapper = mapper;
         }
-
         public async Task<LoginResponseBody> loginUser(LoginRequestBody requestBody)
         {
             var user = await context.Users.
@@ -57,7 +55,7 @@ namespace JobPortal.Services
             }
                 var newUser = mapper.Map<User>(registerRequest);
                 newUser.password = BCrypt.Net.BCrypt.HashPassword(newUser.password);
-                newUser.roleId = new Guid("E7FAC944-C656-4786-4E00-08DC69AEFC95");
+                newUser.roleId = new Guid("E7FAC944-C656-4786-4E00-08DC69AEFC97");
                 try
                 {
                     context.Users.AddAsync(newUser);
