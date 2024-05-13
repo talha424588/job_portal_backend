@@ -5,6 +5,6 @@ namespace JobPortal.Repositories
 {
     public interface IEmployerRepository
     {
-        EmployerResponseBody addEmployerCompany(EmployerRequestBody requestBody);
+        Task <EmployerResponseBody> addEmployerCompany(EmployerRequestBody requestBody);
     }
 }

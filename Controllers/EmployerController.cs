@@ -19,7 +19,7 @@ namespace JobPortal.Controllers
         }
 
         [HttpPost("vendor/registration")]
-        public async Task<EmployerResponseBody> vendorRegistration(EmployerRequestBody requestBody)
+        public Task<EmployerResponseBody> vendorRegistration(EmployerRequestBody requestBody)
         {
             return employerRepository.addEmployerCompany(requestBody);
         }

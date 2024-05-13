@@ -27,8 +27,5 @@ namespace JobPortal.DTO.User.RequestBody
 
         [Required(ErrorMessage = "company address required")]
         public string address { get; set; }
-
-        [Required(ErrorMessage = "jwt token required")]
-        public string jwt { get; set; }
     }
 }

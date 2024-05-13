@@ -10,8 +10,12 @@ namespace JobPortal.Utils
         public Mapper()
         {
             CreateMap<User, RegisterRequestBody>().ReverseMap();
+
             CreateMap<User, RegisterResponseBody>().ReverseMap();
+
             CreateMap<User, LoginResponseBody>().ReverseMap();
+            CreateMap<Employer, EmployerRequestBody>().ReverseMap();
+            CreateMap<Employer,EmployerResponseBody>().ReverseMap();
         }
     }
 }

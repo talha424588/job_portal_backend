@@ -64,5 +64,18 @@ namespace UserManagement.Utils
             }
             return false;
         }
+
+        public string GetEmailFromJwt()
+        {
+            var tokenHandler = new JwtSecurityTokenHandler();
+            var accessToken = httpContextAccessor.HttpContext.Request.Headers["Authorization"]
+            .FirstOrDefault()?.Split(" ").Last();
+            if (accessToken != null)
+            {
+                var token = tokenHandler.ReadJwtToken(accessToken);
+                return token.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/emailaddress").Value;
+            }
+            return null;
+        }
     }
 }

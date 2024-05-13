@@ -65,7 +65,7 @@ namespace JobPortal.Services
                     throw new Exception("something went wrong",ex);
                 }
 
-                RegisterResponseBody responseBody = mapper.Map<RegisterResponseBody>(newUser);
+                RegisterResponseBody responseBody = mapper.Map< RegisterResponseBody>(newUser);
                 return responseBody;
         }
     }
