@@ -24,7 +24,14 @@ builder.Services.AddAutoMapper(typeof(Program));
 builder.Services.AddSingleton<JWT>();
 builder.Services.AddHttpContextAccessor();
 builder.Services.AddSignalR();
+builder.Services.AddCors(options =>
+{
 
+    options.AddDefaultPolicy(builder =>
+    {
+        builder.WithOrigins("http://localhost:3000").AllowAnyMethod().AllowCredentials().AllowAnyHeader();
+    });
+});
 
 //Jwt Start Here
 builder.Services.AddAuthentication(Options => {
@@ -48,8 +55,10 @@ builder.Services.AddAuthentication(Options => {
 builder.Services.AddAuthorization(options => options.AddPolicy("RequireAdminRole", policy => policy.RequireRole("ROLES_ADMIN")));
 builder.Services.AddDbContext<DatabaseContext>(options => options.UseSqlServer(builder.Configuration.GetConnectionString("dbsc")));
 Environment.SetEnvironmentVariable("GOOGLE_APPLICATION_CREDENTIALS", @"jobPortal.json");
+
 builder.Services.AddSingleton<IDictionary<string, UserRoomConnection>>(opt => 
      new Dictionary<string,UserRoomConnection>());
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -62,8 +71,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 app.UseAuthentication();
 app.UseAuthorization();
-app.MapHub<ChatHub>("chat-hub");
-
+app.MapHub<ChatHub>("/chat");
+app.UseCors();
 app.MapControllers();
 
 app.Run();
